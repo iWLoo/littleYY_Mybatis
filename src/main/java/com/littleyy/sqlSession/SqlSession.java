@@ -16,6 +16,8 @@ public interface SqlSession {
     //根据id删除
     Boolean deleteOne(String statementid,Object... params) throws Exception;
 
+    Boolean insertOne(String statementid,Object... params) throws Exception;
+
     //为Dao接口生成代理实现类
     public <T> T getMapper(Class<?> mapperClass);
 

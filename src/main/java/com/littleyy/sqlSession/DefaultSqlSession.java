@@ -55,6 +55,13 @@ public class DefaultSqlSession implements SqlSession {
     }
 
     @Override
+    public Boolean insertOne(String statementid, Object... params) throws Exception {
+        simpleExecutor simpleExecutor = new simpleExecutor();
+        MappedStatement mappedStatement = configuration.getMappedStatementMap().get(statementid);
+        return simpleExecutor.insertOne(configuration, mappedStatement, params);
+    }
+
+    @Override
     public <T> T getMapper(Class<?> mapperClass) {
         // 使用JDK动态代理来为Dao接口生成代理对象，并返回
 
@@ -81,6 +88,8 @@ public class DefaultSqlSession implements SqlSession {
                         return updateOne(statementId,args);
                     }else if(methodName.toLowerCase().startsWith("delete")){
                         return deleteOne(statementId,args);
+                    }else if(methodName.toLowerCase().startsWith("insert")){
+                        return insertOne(statementId,args);
                     }
                 }
 

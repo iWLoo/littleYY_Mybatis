@@ -150,6 +150,31 @@ public class simpleExecutor implements  Executor {
         }
     }
 
+    @Override
+    public boolean insertOne(Configuration configuration, MappedStatement mappedStatement, Object... params) throws Exception {
+        // 1. 注册驱动，获取连接
+        Connection connection = configuration.getDataSource().getConnection();
+
+        // 2. 获取sql语句 : select * from user where id = #{id} and username = #{username}
+        //转换sql语句： select * from user where id = ? and username = ? ，转换的过程中，还需要对#{}里面的值进行解析存储
+        String sql = mappedStatement.getSql();
+        BoundSql boundSql = getBoundSql(sql);
+
+        // 3.获取预处理对象：preparedStatement
+        PreparedStatement preparedStatement = connection.prepareStatement(boundSql.getSqlText());
+
+        // 4. 设置参数
+        preparedStatement.setObject(1,params[0]);
+
+        // 5. 执行sql
+        int executeUpdate = preparedStatement.executeUpdate();
+        if(executeUpdate > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     private Class<?> getClassType(String paramterType) throws ClassNotFoundException {
         if(paramterType!=null){
             Class<?> aClass = Class.forName(paramterType);

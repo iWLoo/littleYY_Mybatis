@@ -13,5 +13,6 @@ public interface Executor {
 
     boolean deleteById(Configuration configuration,MappedStatement mappedStatement,Object... params) throws Exception;
 
+    boolean insertOne(Configuration configuration,MappedStatement mappedStatement,Object... params) throws Exception;
 
 }
